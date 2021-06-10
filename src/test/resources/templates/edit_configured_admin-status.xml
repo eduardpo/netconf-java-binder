@@ -1,0 +1,10 @@
+<config>
+  <radio-dn xmlns="http://siklu.com/yang/tg/radio/dn">
+    <links>
+      <configured>
+      <remote-assigned-name>{{ NAME }}</remote-assigned-name>
+      <admin-status>{{ ADMIN_STATUS }}</admin-status>
+      </configured>
+    </links>
+  </radio-dn>
+</config>

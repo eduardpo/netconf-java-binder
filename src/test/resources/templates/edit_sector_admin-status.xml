@@ -1,0 +1,10 @@
+<config>
+  <radio-common xmlns="http://siklu.com/yang/tg/radio">
+    <sectors-config>
+      <sector>
+        <index>{{ INDEX }}</index>
+        <admin-status>{{ ADMIN_STATUS }}</admin-status>
+      </sector>
+    </sectors-config>
+  </radio-common>
+</config>

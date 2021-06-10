@@ -1,0 +1,9 @@
+<config>
+  <radio-common xmlns="http://siklu.com/yang/tg/radio">
+    <node-config>
+      <default-ssid-profile>
+      <name>{{ NAME }}</name>
+      </default-ssid-profile>
+    </node-config>
+  </radio-common>
+</config>

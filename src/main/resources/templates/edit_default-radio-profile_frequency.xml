@@ -1,0 +1,9 @@
+<config>
+	<radio-dn xmlns="http://siklu.com/yang/tg/radio/dn">
+		<node-config>
+			<default-radio-profile>
+				<frequency>{{ FREQUENCY }}</frequency>
+			</default-radio-profile>
+		</node-config>
+	</radio-dn>
+</config>

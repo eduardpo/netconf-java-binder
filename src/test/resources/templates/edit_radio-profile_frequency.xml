@@ -1,0 +1,12 @@
+<config>
+  <radio-dn xmlns="http://siklu.com/yang/tg/radio/dn">
+    <sectors-config>
+      <sector>
+        <index>{{ INDEX }}</index>
+        <radio-profile>
+          <frequency>{{ FREQUENCY }}</frequency>
+        </radio-profile>
+      </sector>
+    </sectors-config>
+  </radio-dn>
+</config>
