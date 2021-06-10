@@ -17,7 +17,7 @@ git submodule update --init --recursive
 
 ### Configuration guidelines ###
 
-script\yang_source.ini:
+# script\yang_source.ini: #
 
 [DEFAULT]
 source = device
