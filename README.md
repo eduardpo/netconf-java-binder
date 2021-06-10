@@ -6,7 +6,7 @@
 
 ### How do I get set up? ###
 This project depends on yang_to_xml, therefore in order to clone:
-git clone --recurse-submodules git@bitbucket.org:siklusw/netconf-binder.git
+git clone --recurse-submodules https://github.com/eduardpo/netconf-java-binder.git
 
 ### Configuration guidelines: script\yang_source.ini ###
 [DEFAULT]
