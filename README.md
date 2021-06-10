@@ -15,7 +15,10 @@ If you already cloned the project and forgot --recurse-submodules:
 git submodule update --init --recursive
 
 
-### Configuration guidelines: script\yang_source.ini ###
+### Configuration guidelines ###
+
+script\yang_source.ini:
+
 [DEFAULT]
 source = device
 
