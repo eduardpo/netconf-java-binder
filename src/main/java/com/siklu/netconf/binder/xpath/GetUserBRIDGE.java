@@ -4,16 +4,16 @@ import lombok.Getter;
 
 public enum GetUserBRIDGE {
 
-    BRIDGE_BRIDGE_PORT("", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-port"),
+    USER_BRIDGE_BRIDGE("", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge"),
+    BRIDGE_PORT_S_VLAN("", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-port/tg-u-bridge:s-vlan"),
+    BRIDGE_PORT_C_VLAN("", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-port/tg-u-bridge:c-vlan"),
     BRIDGE_STATE("", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:state"),
+    BRIDGE_PORT_BRIDGE_PORT_ID("", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-port/tg-u-bridge:bridge-port-id"),
+    BRIDGE_PORT_INTERFACE("", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-port/tg-u-bridge:interface"),
+    BRIDGE_BRIDGE_PORT("", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-port"),
     USER_BRIDGE("user-bridge", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge"),
-    BRIDGE_BRIDGE_ID("user-bridge", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-id"),
-    USER_BRIDGE_BRIDGE("user-bridge", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge"),
     BRIDGE_PORT_BRIDGE_PORT_TYPE("user-bridge", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-port/tg-u-bridge:bridge-port-type"),
-    BRIDGE_PORT_BRIDGE_PORT_ID("user-bridge", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-port/tg-u-bridge:bridge-port-id"),
-    BRIDGE_PORT_INTERFACE("user-bridge", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-port/tg-u-bridge:interface"),
-    BRIDGE_PORT_C_VLAN("user-bridge", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-port/tg-u-bridge:c-vlan"),
-    BRIDGE_PORT_S_VLAN("user-bridge", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-port/tg-u-bridge:s-vlan");
+    BRIDGE_BRIDGE_ID("user-bridge", "xmlns:tg-u-bridge", "http://siklu.com/yang/tg/user-bridge", "/tg-u-bridge:user-bridge/tg-u-bridge:bridge/tg-u-bridge:bridge-id");
 
     @Getter
     String rootTag;
