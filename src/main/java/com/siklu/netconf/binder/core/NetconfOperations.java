@@ -9,7 +9,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,25 +16,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.siklu.analyzers.NetConfAnalyzer;
-
-import jsystem.framework.analyzer.AnalyzerException;
-import jsystem.framework.report.Reporter;
-import jsystem.framework.system.SystemObjectImpl;
-import lombok.Getter;
-import lombok.Setter;
 import net.juniper.netconf.CommitException;
 import net.juniper.netconf.Device;
 import net.juniper.netconf.XML;
 
-public class NetconfOperations extends SystemObjectImpl {
+public class NetconfOperations {
 
 	Device device;
-	@Getter @Setter
 	protected String assignedName = "";
-	public NetconfOperations(Device device, String name) {
+	public NetconfOperations(Device device) {
 		this.device = device;
-		this.assignedName = name;
 	}
 
 	private XML execute(String rpcTitle, String command, boolean ignoreErrors) {
@@ -43,14 +33,12 @@ public class NetconfOperations extends SystemObjectImpl {
 		try {
 			String[] operation = command.split("<")[1].split(">")[0].split(" ");
 			reply = device.executeRPC(command);
-			report.report(getAssignedName() + "-nc: " + 
-					operation[0] + " -> " + rpcTitle, reply == null ? 
-					"<plaintext>" + command + "\nNULL" : 
-					"<plaintext>" + command +  "\n" + reply.toString(), true);
-			setTestAgainstObject(reply);
-			if (!ignoreErrors) analyze(new NetConfAnalyzer(),true);
+//			report.report(getAssignedName() + "-nc: " + 
+//					operation[0] + " -> " + rpcTitle, reply == null ? 
+//					"<plaintext>" + command + "\nNULL" : 
+//					"<plaintext>" + command +  "\n" + reply.toString(), true);
 		} catch (SAXException | IOException e) {
-			report.report(e.toString(),e);
+			//report.report(e.toString(),e);
 			e.printStackTrace();
 		}
 		return reply;
@@ -92,12 +80,7 @@ public class NetconfOperations extends SystemObjectImpl {
 
 	public String commit() {
 		String reply = "";
-		try {
-			reply = sendCommand("", "<commit/>");
-		} catch (AnalyzerException e) {
-			report.report("commit failed. running discard", reply + "\nCcompare Candidate vs Running:\n<plaintext>" + compare("candidate","running"),Reporter.WARNING);
-			discard();
-		}
+		reply = sendCommand("", "<commit/>");
 		return reply;
 	}
 
@@ -142,9 +125,10 @@ public class NetconfOperations extends SystemObjectImpl {
 	 * @return
 	 */
 	public String compare(String src, String dst) {
+		String difference = "";
 		String srcDB = sendCommand("", String.format("<get-config><source><%s/></source></get-config>",src));
 		String dstDB = sendCommand("", String.format("<get-config><source><%s/></source></get-config>",dst));
-		String difference = StringUtils.difference(srcDB, dstDB);
+		//difference = StringUtils.difference(srcDB, dstDB);
 		return difference;
 	}
 
@@ -220,11 +204,10 @@ public class NetconfOperations extends SystemObjectImpl {
 			reply = trimReply(get(rpcTitle, xml));
 
 			if (reply.equals("")) {
-				report.report("NETCONF GET REPLY IS EMPTY!", Reporter.WARNING);
+				//report.report("NETCONF GET REPLY IS EMPTY!", Reporter.WARNING);
 			}
 
 		} catch (ParserConfigurationException e) {
-			report.report(e.toString(),e);
 			e.printStackTrace();
 		}
 		return reply;
@@ -259,10 +242,10 @@ public class NetconfOperations extends SystemObjectImpl {
 			}
 
 		} catch (DOMException e) {
-			report.report(e.toString(),e);
+			//report.report(e.toString(),e);
 			e.printStackTrace();
 		} catch (Exception e) {
-			report.report(e.toString(),e);
+			//report.report(e.toString(),e);
 			e.printStackTrace();
 		}
 

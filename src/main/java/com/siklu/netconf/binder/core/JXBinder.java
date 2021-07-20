@@ -8,10 +8,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.math3.geometry.spherical.oned.ArcsSet.Split;
-
-import com.siklu.netconf.binder.gen.common.generated.RpcOperationType;
-
 public class JXBinder {
 
 	@SuppressWarnings({ "hiding", "unchecked" })

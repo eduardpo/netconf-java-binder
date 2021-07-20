@@ -23,9 +23,9 @@ public class RadioCommonApp extends NetconfOperations {
 
 	private final JXBinder jxBinder;
 
-	public RadioCommonApp(Device device,String name) throws JAXBException 
+	public RadioCommonApp(Device device) throws JAXBException 
 	{	
-		super(device,name); 
+		super(device); 
 		jxBinder = new JXBinder();
 	}
 

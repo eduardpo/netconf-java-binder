@@ -25,10 +25,9 @@ public class SystemApp  extends NetconfOperations {
 
 	private final JXBinder jxBinder;
 
-	public SystemApp(Device device, String name) throws JAXBException {
-		super(device,name); 
+	public SystemApp(Device device) throws JAXBException {
+		super(device); 
 		jxBinder = new JXBinder();
-		setAssignedName(name);
 	}
 
 	public List<Banks> getSystemStateBanksInfo() {

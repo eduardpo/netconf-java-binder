@@ -15,8 +15,8 @@ public class IpApp extends NetconfOperations {
 	;
 	private final JXBinder jxBinder;
 
-	public IpApp(Device device, String name) throws JAXBException {
-		super(device,name);
+	public IpApp(Device device) throws JAXBException {
+		super(device);
 		jxBinder = new JXBinder();
 	}
 

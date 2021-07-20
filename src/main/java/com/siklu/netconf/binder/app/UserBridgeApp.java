@@ -16,8 +16,8 @@ public class UserBridgeApp  extends NetconfOperations {
 
 	private final JXBinder jxBinder;
 
-	public UserBridgeApp(Device device, String name) throws JAXBException {
-		super(device,name); 
+	public UserBridgeApp(Device device) throws JAXBException {
+		super(device); 
 		jxBinder = new JXBinder();
 	}
 
