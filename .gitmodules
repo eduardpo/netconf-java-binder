@@ -1,0 +1,3 @@
+[submodule "script/yang_to_xml"]
+	path = script/yang_to_xml
+	url = https://github.com/eduardpo/yang_to_xml.git
