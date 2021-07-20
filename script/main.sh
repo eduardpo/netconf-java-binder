@@ -94,6 +94,7 @@ echo "Copy Final Product"
 echo '**********'
 cp -rf pyang_out/java/* ../../src/main/java/com/siklu/netconf/binder/xpath
 cp -rf jaxb_out/* ../../src/main/java/com/siklu/netconf/binder/gen
+chown -R ${SUDO_USER}:100 ../../src/main/java/com/siklu/netconf/binder/gen
 chown -R $(logname):100 ../../src/main/java/com/siklu/netconf/binder/gen
 rm -rf ../$YANG_DIR/
 

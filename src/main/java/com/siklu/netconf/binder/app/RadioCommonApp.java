@@ -1,22 +1,21 @@
 package com.siklu.netconf.binder.app;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.xml.sax.SAXException;
-
 import com.siklu.netconf.binder.core.JXBinder;
 import com.siklu.netconf.binder.core.NetconfOperations;
+import com.siklu.netconf.binder.gen.common.generated.AdminStatus;
 import com.siklu.netconf.binder.gen.common.generated.ObjectFactory;
 import com.siklu.netconf.binder.gen.common.generated.RadioCommon;
 import com.siklu.netconf.binder.gen.common.generated.RadioCommon.Links;
 import com.siklu.netconf.binder.gen.common.generated.RadioCommon.Links.Active;
+import com.siklu.netconf.binder.gen.common.generated.RadioCommon.SectorsConfig;
 import com.siklu.netconf.binder.gen.common.generated.RadioCommon.SectorsConfig.Sector;
-import com.siklu.netconf.binder.gen.common.generated.AdminStatus;
 import com.siklu.netconf.binder.xpath.GetRadioCOMMON;
 
-import net.juniper.netconf.CommitException;
 import net.juniper.netconf.Device;
 
 
@@ -24,9 +23,9 @@ public class RadioCommonApp extends NetconfOperations {
 
 	private final JXBinder jxBinder;
 
-	public RadioCommonApp(Device device) throws JAXBException 
+	public RadioCommonApp(Device device,String name) throws JAXBException 
 	{	
-		super(device); 
+		super(device,name); 
 		jxBinder = new JXBinder();
 	}
 
@@ -68,7 +67,7 @@ public class RadioCommonApp extends NetconfOperations {
 
 		int i; // link index
 
-		String strLinks = xpathGet(GetRadioCOMMON.RADIO_COMMON_LINKS.getPrefix(), 
+		String strLinks = xpathGet("getLinksActive", GetRadioCOMMON.RADIO_COMMON_LINKS.getPrefix(), 
 				GetRadioCOMMON.RADIO_COMMON_LINKS.getNs(), 
 				GetRadioCOMMON.RADIO_COMMON_LINKS.getXpath(), "", -1); 					// get RPC XML reply
 
@@ -84,7 +83,7 @@ public class RadioCommonApp extends NetconfOperations {
 				}
 			}
 
-			if (!links.getActive().get(i).getRemoteAssignedName().equals(remoteAssignedName)) {
+			if (i == links.getActive().size()) {
 				throw new Exception ("Link Down");
 			}
 
@@ -126,21 +125,95 @@ public class RadioCommonApp extends NetconfOperations {
 	    }
 	}
 	 */
+	
+	/**
+	 * get sector info 
+	 * @param index - sector index 1 based
+	 * @return
+	 */
 	public Sector getSectorsConfigSector(int index) 
 	{
 		int sectorIndex = index - 1; // '0' based
 
-		String strSectors = xpathGet(GetRadioCOMMON.RADIO_COMMON_SECTORS_CONFIG.getPrefix(), 
+		String strSectors = xpathGet("getSectorsConfigSector", GetRadioCOMMON.RADIO_COMMON_SECTORS_CONFIG.getPrefix(), 
 				GetRadioCOMMON.RADIO_COMMON_SECTORS_CONFIG.getNs(), 
 				GetRadioCOMMON.RADIO_COMMON_SECTORS_CONFIG.getXpath(), "", -1); 		// get RPC XML reply
 		RadioCommon  objSectors = jxBinder.unmarshalData(RadioCommon.class, strSectors);		// Unmarshal XML to class object
 
 		return objSectors.getSectorsConfig().getSector().get(sectorIndex);
 	}
+	
+	/**
+	 * get SectorsConfig info 
+	 * @return
+	 */
+	public SectorsConfig getSectorsConfig() 
+	{
 
-	public String getSsid() 
+		String strSectors = xpathGet("getSectorsConfig", GetRadioCOMMON.RADIO_COMMON_SECTORS_CONFIG.getPrefix(), 
+				GetRadioCOMMON.RADIO_COMMON_SECTORS_CONFIG.getNs(), 
+				GetRadioCOMMON.RADIO_COMMON_SECTORS_CONFIG.getXpath(), "", -1); 		// get RPC XML reply
+		RadioCommon  objSectors = jxBinder.unmarshalData(RadioCommon.class, strSectors);		// Unmarshal XML to class object
+
+		return objSectors.getSectorsConfig();
+	}
+	
+	/**
+	 * get modem temperature.
+	 * @param sector
+	 * @return
+	 */
+	public int getSectorModemTemperature(int sector)
+	{
+		Sector data = getSectorsConfigSector(sector);
+		short modemTemp = data.getState().getTemperatures().getModemTemperature();
+		return modemTemp;
+	}
+
+	/**
+	 * get RF temperatures in sector. each sector can host up to 4 RF's
+	 * @param sector
+	 * @return list of RF temperatures (0 based)
+	 */
+	public ArrayList<Short> getSectorRFTemperatures(int sector)
+	{
+		ArrayList<Short> reply = new ArrayList<Short>();
+		Sector data = getSectorsConfigSector(sector);
+		for (int idx=0; idx<4; idx++) {
+			reply.add(data.getState().getTemperatures().getRf().get(idx).getRfTemperature());
+		}
+		return reply;	
+	}
+
+	/**
+	 * 
+	 * @param sector
+	 * @return
+	 * @throws Exception 
+	 */
+	public String getSectorMacAddress(int sector) throws Exception {
+		
+		int sectorIndex = sector - 1; // '0' based
+		String sectorMacAddress = "";
+		
+		SectorsConfig sectorsConfigData = getSectorsConfig();
+		
+		if (sectorIndex >= sectorsConfigData.getSector().size()) {
+			throw new Exception ("Sector index: " + sectorIndex + " is out of range!");
+		}
+		
+		for(int i = 0; i <= sectorsConfigData.getSector().size(); i++) {
+			sectorMacAddress = sectorsConfigData.getSector().get(sectorIndex).getState().getMacAddr();
+			if (i == sectorIndex) {
+				break;
+			}
+		}
+		return sectorMacAddress;
+	}
+	
+	public String getProfileSsid() 
 	{		
-		String strDefaultSsidProfile = xpathGet(GetRadioCOMMON.DEFAULT_SSID_PROFILE_SSID.getPrefix(), 
+		String strDefaultSsidProfile = xpathGet("getProfileSsid", GetRadioCOMMON.DEFAULT_SSID_PROFILE_SSID.getPrefix(), 
 				GetRadioCOMMON.DEFAULT_SSID_PROFILE_SSID.getNs(), 
 				GetRadioCOMMON.DEFAULT_SSID_PROFILE_SSID.getXpath(), "", -1); 							// get RPC XML reply
 		RadioCommon  ssidProfileObject = jxBinder.unmarshalData(RadioCommon.class, strDefaultSsidProfile);		// Unmarshal XML to class object
@@ -153,6 +226,8 @@ public class RadioCommonApp extends NetconfOperations {
 	{	
 		String rpcData = "";
 		ObjectFactory objFactory = new ObjectFactory();
+		String funcTitle = String.format("editSectorAdminStatus sectorIndex: %d, adminStatus: %s", 
+				sectorIndex, adminStatus.toString());
 
 		RadioCommon.SectorsConfig.Sector sector = objFactory.createRadioCommonSectorsConfigSector();
 		sector.setIndex(sectorIndex);
@@ -167,26 +242,14 @@ public class RadioCommonApp extends NetconfOperations {
 
 		rpcData = jxBinder.marshalData(RadioCommon.class, radioCommonObj);
 
-		try {
-
-			editConfig(rpcData, commit);	// Send rpcData to device
-
-		} catch (CommitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		editConfig(funcTitle, rpcData, commit);	// Send rpcData to device
 	}
 
-	public void editSsid(String ssid, Boolean commit) throws JAXBException
+	public void editProfileSsid(String ssid, Boolean commit) throws JAXBException
 	{	
 		String rpcData = "";
 		ObjectFactory objFactory = new ObjectFactory();
+		String funcTitle = String.format("editProfileSsid ssid: %s", ssid);
 
 		RadioCommon.NodeConfig.DefaultSsidProfile defaultSsidProfile = objFactory.createRadioCommonNodeConfigDefaultSsidProfile();
 		defaultSsidProfile.setSsid(ssid);
@@ -199,22 +262,31 @@ public class RadioCommonApp extends NetconfOperations {
 
 		rpcData = jxBinder.marshalData(RadioCommon.class, radioCommonObj);
 
-		try {
-
-			editConfig(rpcData, commit);	// Send rpcData to device
-
-		} catch (CommitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		editConfig(funcTitle, rpcData, commit);	// Send rpcData to device
 	}
 
+	/**
+	 * set Node Tx power (for all links and all sectors)
+	 * @param txPowerIndex 0-31
+	 * @param commit
+	 */
+	public void editNodeTxPowerControl(int txPowerIndex, boolean commit) {
+		String rpcData = "";
+		ObjectFactory objFactory = new ObjectFactory();
+		String funcTitle = String.format("editNodeTxPowerControl txPowerIndex: %d", txPowerIndex);
+
+		RadioCommon.NodeConfig nodeConfig = objFactory.createRadioCommonNodeConfig();
+		List<String> txPowerControl = nodeConfig.getTxPowerControl();
+		txPowerControl.add(txPowerIndex+"");
+		
+		RadioCommon radioCommonObj = objFactory.createRadioCommon();
+		radioCommonObj.setNodeConfig(nodeConfig);
+
+		rpcData = jxBinder.marshalData(RadioCommon.class, radioCommonObj);
+
+		editConfig(funcTitle, rpcData, commit);	// Send rpcData to device
+	}
+	
 	public String linkToString(Active link)
 	{
 		//String ret = String.format("Stats for %s: RSSI: %.1f SNR:%.1f MCS Tx/Rx: %.1f/%.1f PER Tx/Rx: %.2f/%.2f TxPower: %d",

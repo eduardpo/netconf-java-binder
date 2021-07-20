@@ -12,8 +12,8 @@ public class InterfacesApp extends NetconfOperations {
 
 	private final JXBinder jxBinder;
 	
-	public InterfacesApp(Device device) throws JAXBException {
-		super(device); 
+	public InterfacesApp(Device device, String name) throws JAXBException {
+		super(device,name); 
 		jxBinder = new JXBinder();
 	}
 	

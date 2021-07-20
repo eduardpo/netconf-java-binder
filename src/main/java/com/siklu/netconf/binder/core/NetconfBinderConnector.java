@@ -42,15 +42,17 @@ public class NetconfBinderConnector {
 	}
 
 	public void InitNetconfObjects() throws JAXBException {
-
-		radioCommon = new RadioCommonApp(device);
-		radioDn = new RadioDnApp(device);
-		interfaces = new InterfacesApp(device);
-		ip = new IpApp(device);
-		system = new SystemApp(device);
-		inventory = new InventoryApp(device);
-		userBridge = new UserBridgeApp(device);
-		userManagement = new UserManagementApp(device);
+		//system needs to be first in order to get the system assign name for reporting
+		system = new SystemApp(device,"pre");
+		String name = system.getSystemName();
+		system.setAssignedName(name);
+		radioCommon = new RadioCommonApp(device,name);
+		radioDn = new RadioDnApp(device,name);
+		interfaces = new InterfacesApp(device,name);
+		ip = new IpApp(device,name);
+		inventory = new InventoryApp(device,name);
+		userBridge = new UserBridgeApp(device,name);
+		userManagement = new UserManagementApp(device,name);
 	}
 
 	/**

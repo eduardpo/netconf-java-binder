@@ -11,8 +11,8 @@ public class InventoryApp extends NetconfOperations {
 
 	private final JXBinder jxBinder;
 	
-	public InventoryApp(Device device) throws JAXBException {
-		super(device); 
+	public InventoryApp(Device device, String name) throws JAXBException {
+		super(device,name);
 		jxBinder = new JXBinder();
 	}
 

@@ -8,6 +8,10 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.math3.geometry.spherical.oned.ArcsSet.Split;
+
+import com.siklu.netconf.binder.gen.common.generated.RpcOperationType;
+
 public class JXBinder {
 
 	@SuppressWarnings({ "hiding", "unchecked" })
@@ -22,16 +26,30 @@ public class JXBinder {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return tgData;
 	}
 
 	public <T> String marshalData(Class<? extends T> nameSpace, T nameSpaceobj)
 	{
-		String rpcData = "";
+		String configData = marshalGenericData(nameSpace, nameSpaceobj);
+		configData = "<config>\n".concat(configData);
+		configData = configData.concat("</config>");
+		return configData;
+	}
+	
+	public <T> String marshalRpcData(Class<? extends T> nameSpace, T nameSpaceobj)
+	{
+		String rpcData = marshalGenericData(nameSpace, nameSpaceobj);
+		return rpcData;
+	}
+	
+	public <T> String marshalGenericData(Class<? extends T> nameSpace, T nameSpaceobj)
+	{
+		String genericData = "";
 		Marshaller marshallerObj;
 		StringWriter xmlWriter = new StringWriter();
-		
+
 		try {
 			JAXBContext contextObj = JAXBContext.newInstance(nameSpace); 
 			marshallerObj = contextObj.createMarshaller();  
@@ -42,12 +60,9 @@ public class JXBinder {
 			e.printStackTrace();
 		}
 
-		rpcData = xmlWriter.toString();
-		rpcData = rpcData.substring(rpcData.indexOf('\n')+1);
-		rpcData = "<config>\n".concat(rpcData);
-		rpcData = rpcData.concat("</config>");
-
-		return rpcData;
+		genericData = xmlWriter.toString();
+		genericData = genericData.substring(genericData.indexOf('\n')+1);	// strip off first line
+		
+		return genericData;
 	}
-
 }
