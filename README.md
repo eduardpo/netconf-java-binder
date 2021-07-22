@@ -9,7 +9,7 @@
 ## Setup ##
 This project depends on yang_to_xml, therefore in order to clone:
 
-git clone --recurse-submodules https://github.com/eduardpo/netconf-java-binder.git
+git clone --recurse-submodules git@github.com:eduardpo/netconf-java-binder.git
 
 If you already cloned the project and forgot --recurse-submodules:
 
