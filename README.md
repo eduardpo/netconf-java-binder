@@ -3,7 +3,7 @@
 ## Features
 1. Automatic generation of Java code through Netconf YANG modules.
 2. Serialization of Java objects to RPC request messages to be sent to device.
-3. Deserialization of RPC reply messages received from device and unmarhsaling them to Java objects.
+3. Deserialization of RPC reply messages received from device and unmarshalling them to Java objects.
 
 
 ## Setup ##
